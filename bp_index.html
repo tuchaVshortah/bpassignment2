@@ -262,14 +262,14 @@
         }
 
         function getResultText(result) {
-            switch (result) {
-                case 0:
+            switch (result.toString()) {
+                case '0':
                     return 'Game in progress';
-                case 1:
+                case '1':
                     return 'You win!';
-                case 2:
+                case '2':
                     return 'You lose!';
-                case 3:
+                case '3':
                     return 'It\'s a draw!';
                 default:
                     return 'Unknown result';

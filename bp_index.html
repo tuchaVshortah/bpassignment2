@@ -233,7 +233,6 @@
         async function update(user, contract) {
             const gameHistoryList = document.getElementById('gameHistory');
             const gameHistory = await contract.methods.getUserGames(user).call();
-            const game = await contract.methods.games(latestGameId).call();
 
             gameHistoryList.innerHTML = '';
             for (const gameId of gameHistory) {

@@ -227,7 +227,7 @@
                 console.error("MetaMask or compatible wallet extension not detected.");
             }
             
-            contract = web3.eth.Contract(abi, contractAddress);
+            contract = new web3.eth.Contract(abi, contractAddress);
             accounts = await web3.eth.getAccounts();
             user = accounts[0];
         }

@@ -244,7 +244,7 @@
         }
 
         async function play() {
-            const [user, contract] = init();
+            const [user, contract] = await init();
             const selectedMove = document.getElementById('move').value;
 
             try {

@@ -206,9 +206,6 @@
 	}
 ];
 
-        const [user, contract] = init();
-        update();
-
         async function init() {
             if (window.ethereum) {
                 ethereum = window.ethereum;
@@ -244,6 +241,7 @@
         }
 
         async function play() {
+            const [user, contract] = init();
             const selectedMove = document.getElementById('move').value;
 
             try {

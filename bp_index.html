@@ -205,10 +205,6 @@
 		"type": "function"
 	}
 ];
-        let web3;
-        let accounts;
-        let user;
-        let contract;
 
         async function init() {
             if (typeof window.ethereum !== 'undefined') {
@@ -230,6 +226,8 @@
             contract = new web3.eth.Contract(abi, contractAddress);
             accounts = await web3.eth.getAccounts();
             user = accounts[0];
+            
+            return [user, contract];
         }
 
         async function play() {
@@ -237,7 +235,7 @@
 
             try {
 
-                init();
+                [user, contract] = await init();
 
                 const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 
@@ -245,13 +243,13 @@
                 await waitForTransactionToBeMined(result.transactionHash);
 
                 // Display the result
-                await displayGameResult(user);
+                await displayGameResult(user, contract);
             } catch (error) {
                 console.error(error);
             }
         }
 
-        async function displayGameResult(user) {
+        async function displayGameResult(user, contract) {
             const gameHistory = await contract.methods.getUserGames(user).call();
             const latestGameId = gameHistory[gameHistory.length - 1];
             const game = await contract.methods.games(latestGameId).call();
@@ -282,8 +280,8 @@
 
         // Call displayGameResult when the page loads to show the initial game status
         window.addEventListener('load', async () => {
-            init();
-            await displayGameResult(user);
+            [user, contract] = await init();
+            await displayGameResult(user, contact);
         });
 
     </script>

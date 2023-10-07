@@ -206,6 +206,9 @@
 	}
 ];
 
+        [user, contract] = await init();
+        await update();
+
         async function init() {
             if (typeof window.ethereum !== 'undefined') {
                 web3 = new Web3(window.ethereum);
@@ -230,12 +233,24 @@
             return [user, contract];
         }
 
+        async function  update(user, contract) {
+            const gameHistoryList = document.getElementById('gameHistory');
+            const gameHistory = await contract.methods.getUserGames(user).call();
+            const game = await contract.methods.games(latestGameId).call();
+
+            gameHistoryList.innerHTML = '';
+            for (const gameId of gameHistory) {
+                const game = await contract.methods.games(gameId).call();
+                const listItem = document.createElement('li');
+                listItem.textContent = `Game ID: ${gameId}, Result: ${getResultText(game.result)}`;
+                gameHistoryList.appendChild(listItem);
+            }
+        }
+
         async function play() {
             const selectedMove = document.getElementById('move').value;
 
             try {
-
-                [user, contract] = await init();
 
                 const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 
@@ -243,29 +258,10 @@
                 await waitForTransactionToBeMined(result.transactionHash);
 
                 // Display the result
-                await displayGameResult(user, contract);
+                await update(user, contract);
             } catch (error) {
                 console.error(error);
             }
-        }
-
-        async function displayGameResult(user, contract) {
-            const gameHistory = await contract.methods.getUserGames(user).call();
-            const latestGameId = gameHistory[gameHistory.length - 1];
-            const game = await contract.methods.games(latestGameId).call();
-
-            let resultText = '';
-            if (game.result == 0) {
-                resultText = 'Game in progress';
-            } else if (game.result == 1) {
-                resultText = 'You win!';
-            } else if (game.result == 2) {
-                resultText = 'You lose!';
-            } else if (game.result == 3) {
-                resultText = 'It\'s a draw!';
-            }
-
-            document.getElementById('gameResult').innerText = resultText;
         }
 
         async function waitForTransactionToBeMined(transactionHash) {
@@ -281,7 +277,7 @@
         // Call displayGameResult when the page loads to show the initial game status
         window.addEventListener('load', async () => {
             [user, contract] = await init();
-            await displayGameResult(user, contract);
+            await update(user, contract);
         });
 
     </script>

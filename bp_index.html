@@ -12,6 +12,7 @@
         <option value="2">Scissors</option>
     </select>
     <button onclick="play()">Play</button>
+    <button onclick="update()">Update</button>
     <div id="gameResult"></div>
     <h2>Game History</h2>
     <ul id="gameHistory"></ul>
@@ -218,52 +219,47 @@
 
                 await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 
-                // Wait for the transaction to be mined and display the result
-                const gameHistory = await contract.methods.getUserGames(user).call();
-                const latestGameId = gameHistory[gameHistory.length - 1];
-                const game = await contract.methods.games(latestGameId).call();
+                // Wait for the transaction to be mined
+                await waitForTransactionToBeMined();
 
-                let resultText = '';
-                if (game.result == 0) {
-                    resultText = 'Game in progress';
-                } else if (game.result == 1) {
-                    resultText = 'You win!';
-                } else if (game.result == 2) {
-                    resultText = 'You lose!';
-                } else if (game.result == 3) {
-                    resultText = 'It\'s a draw!';
-                }
-
-                document.getElementById('gameResult').innerText = resultText;
-
-                // Display game history
-                const gameHistoryList = document.getElementById('gameHistory');
-                gameHistoryList.innerHTML = '';
-                for (const gameId of gameHistory) {
-                    const game = await contract.methods.games(gameId).call();
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `Game ID: ${gameId}, Result: ${getResultText(game.result)}`;
-                    gameHistoryList.appendChild(listItem);
-                }
+                // Display the result
+                await displayGameResult(user);
             } catch (error) {
                 console.error(error);
             }
         }
 
-        function getResultText(result) {
-            switch (result) {
-                case '0':
-                    return 'Game in progress';
-                case '1':
-                    return 'You win!';
-                case '2':
-                    return 'You lose!';
-                case '3':
-                    return 'It\'s a draw!';
-                default:
-                    return 'Unknown result';
+        async function displayGameResult(user) {
+            const gameHistory = await contract.methods.getUserGames(user).call();
+            const latestGameId = gameHistory[gameHistory.length - 1];
+            const game = await contract.methods.games(latestGameId).call();
+
+            let resultText = '';
+            if (game.result == 0) {
+                resultText = 'Game in progress';
+            } else if (game.result == 1) {
+                resultText = 'You win!';
+            } else if (game.result == 2) {
+                resultText = 'You lose!';
+            } else if (game.result == 3) {
+                resultText = 'It\'s a draw!';
+            }
+
+            document.getElementById('gameResult').innerText = resultText;
+        }
+
+        async function waitForTransactionToBeMined() {
+            const receipt = await web3.eth.getTransactionReceipt(txHash);
+            if (!receipt || receipt.blockNumber === null) {
+                setTimeout(waitForTransactionToBeMined, 1000); // Check again in 1 second
             }
         }
+
+        // Call displayGameResult when the page loads to show the initial game status
+        window.addEventListener('load', async () => {
+            await displayGameResult(user);
+        });
+
     </script>
 </body>
 </html>

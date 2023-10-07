@@ -206,8 +206,8 @@
 	}
 ];
 
-        [user, contract] = await init();
-        await update();
+        [user, contract] = init();
+        update();
 
         async function init() {
             if (typeof window.ethereum !== 'undefined') {

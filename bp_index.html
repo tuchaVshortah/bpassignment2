@@ -12,7 +12,6 @@
         <option value="2">Scissors</option>
     </select>
     <button onclick="play()">Play</button>
-    <button onclick="update()">Update</button>
     <div id="gameResult"></div>
     <h2>Game History</h2>
     <ul id="gameHistory"></ul>
@@ -206,11 +205,14 @@
 		"type": "function"
 	}
 ];
-        const web3 = new Web3(window.ethereum);
-        const accounts = await web3.eth.getAccounts();
-        const user = accounts[0];
+        let web3;
+        let accounts;
+        let user;
 
         async function play() {
+            web3 = new Web3(window.ethereum);
+            accounts = await web3.eth.getAccounts();
+            user = accounts[0];
             const selectedMove = document.getElementById('move').value;
             const contract = new web3.eth.Contract(abi, contractAddress);
 

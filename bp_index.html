@@ -210,15 +210,15 @@
         update();
 
         async function init() {
-            if (typeof window.ethereum !== 'undefined') {
-                const web3 = new Web3(window.ethereum);
+            if (window.ethereum) {
+                ethereum = window.ethereum;
                 try {
                     // Request account access
-                    await window.ethereum.enable();
-                    accounts = await web3.eth.getAccounts();
-                    user = accounts[0];
+                    await ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await ethereum.request({ method: 'eth_accounts' });
+                    const user = accounts[0];
                     // Initialize contract with ABI and contract address
-                    contract = new web3.eth.Contract(abi, contractAddress);
+                    const contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(ethereum));
                 } catch (error) {
                     console.error(error);
                 }
@@ -226,14 +226,10 @@
                 console.error("MetaMask or compatible wallet extension not detected.");
             }
             
-            const contract = new web3.eth.Contract(abi, contractAddress);
-            const accounts = await web3.eth.getAccounts();
-            const user = accounts[0];
-            
             return [user, contract];
         }
 
-        async function  update(user, contract) {
+        async function update(user, contract) {
             const gameHistoryList = document.getElementById('gameHistory');
             const gameHistory = await contract.methods.getUserGames(user).call();
             const game = await contract.methods.games(latestGameId).call();

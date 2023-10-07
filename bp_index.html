@@ -208,10 +208,11 @@
         let web3;
         let accounts;
         let user;
+        let contract;
 
         async function play() {
             const selectedMove = document.getElementById('move').value;
-            const contract = new web3.eth.Contract(abi, contractAddress);
+            let contract = new web3.eth.Contract(abi, contractAddress);
 
             try {
                 await window.ethereum.enable();

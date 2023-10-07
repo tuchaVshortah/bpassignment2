@@ -249,7 +249,7 @@
 
             try {
 
-                const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
+                const result = await contract.methods.play(selectedMove).send({ from: user, value: 5 });
 
                 // Wait for the transaction to be mined
                 await waitForTransactionToBeMined(result.transactionHash);

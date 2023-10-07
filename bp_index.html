@@ -207,6 +207,8 @@
 	}
 ];
         const web3 = new Web3(window.ethereum);
+        const accounts = await web3.eth.getAccounts();
+        const user = accounts[0];
 
         async function play() {
             const selectedMove = document.getElementById('move').value;
@@ -214,8 +216,7 @@
 
             try {
                 await window.ethereum.enable();
-                const accounts = await web3.eth.getAccounts();
-                const user = accounts[0];
+                
 
                 await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 

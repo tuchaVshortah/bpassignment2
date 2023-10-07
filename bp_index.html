@@ -208,13 +208,13 @@
         let web3;
         let accounts;
         let user;
-        const contract = web3.eth.Contract(abi, contractAddress);
+        let contract;
 
         async function play() {
             const selectedMove = document.getElementById('move').value;
 
             try {
-                
+
                 if (typeof window.ethereum !== 'undefined') {
                     web3 = new Web3(window.ethereum);
                     try {
@@ -230,9 +230,10 @@
                 } else {
                     console.error("MetaMask or compatible wallet extension not detected.");
                 }
-
-                const accounts = await web3.eth.getAccounts();
-                const user = accounts[0];
+                
+                contract = web3.eth.Contract(abi, contractAddress);
+                accounts = await web3.eth.getAccounts();
+                user = accounts[0];
 
                 const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 

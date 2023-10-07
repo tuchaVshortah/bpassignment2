@@ -207,15 +207,18 @@
 ];
 
         async function init() {
+            let user;
+            let contract;
+
             if (window.ethereum) {
                 ethereum = window.ethereum;
                 try {
                     // Request account access
                     await ethereum.request({ method: 'eth_requestAccounts' });
                     const accounts = await ethereum.request({ method: 'eth_accounts' });
-                    const user = accounts[0];
+                    user = accounts[0];
                     // Initialize contract with ABI and contract address
-                    const contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(ethereum));
+                    contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(ethereum));
                 } catch (error) {
                     console.error(error);
                 }

@@ -19,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 
     <script>
-        const contractAddress = '0x79F24C714C3e3924125B5125f6856D08D7FfEb12';
+        const contractAddress = '0x25cC28DF472219aDE8A643aDecB4807236Df84dD';
         const abi = [
 	{
 		"inputs": [],
@@ -249,7 +249,7 @@
 
             try {
 
-                const result = await contract.methods.play(selectedMove).send({ from: user, value: 5 });
+                const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 
                 // Wait for the transaction to be mined
                 await waitForTransactionToBeMined(result.transactionHash);

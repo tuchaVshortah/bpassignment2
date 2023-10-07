@@ -17,6 +17,8 @@
     <ul id="gameHistory"></ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.5.2/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.0.28/dist/ethers.min.js"></script>
+
     <script>
         const contractAddress = '0x743ef9646401b9C1997E86442c4E4b6d86152e19';
         const abi = [
@@ -205,8 +207,6 @@
 		"type": "function"
 	}
 ];
-
-        const ethers = require('ethers');
 
         async function init() {
             let user;

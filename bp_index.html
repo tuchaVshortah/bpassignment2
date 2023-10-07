@@ -218,7 +218,7 @@
                     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
                     user = accounts[0];
                     // Initialize contract with ABI and contract address
-                    contract = await new window.web3.eth.Contract(ABI,ADDRESS);
+                    contract = await new window.web3.eth.Contract(abi, contractAddress);
                 } catch (error) {
                     console.error(error);
                 }

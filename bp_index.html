@@ -214,7 +214,23 @@
             const selectedMove = document.getElementById('move').value;
 
             try {
-                await window.ethereum.enable();
+                
+                if (typeof window.ethereum !== 'undefined') {
+                    web3 = new Web3(window.ethereum);
+                    try {
+                        // Request account access
+                        await window.ethereum.enable();
+                        accounts = await web3.eth.getAccounts();
+                        user = accounts[0];
+                        // Initialize contract with ABI and contract address
+                        contract = new web3.eth.Contract(abi, contractAddress);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    console.error("MetaMask or compatible wallet extension not detected.");
+                }
+
                 const accounts = await web3.eth.getAccounts();
                 const user = accounts[0];
 

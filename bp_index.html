@@ -227,7 +227,7 @@
                 console.error("MetaMask or compatible wallet extension not detected.");
             }
             
-            return [user, contract];
+            return {user, contract};
         }
 
         async function update(user, contract) {
@@ -244,7 +244,7 @@
         }
 
         async function play() {
-            const [user, contract] = init();
+            const {user, contract} = init();
             const selectedMove = document.getElementById('move').value;
 
             try {
@@ -273,7 +273,7 @@
 
         // Call displayGameResult when the page loads to show the initial game status
         window.addEventListener('load', async () => {
-            [user, contract] = await init();
+            const {user, contract} = init();
             await update(user, contract);
         });
 

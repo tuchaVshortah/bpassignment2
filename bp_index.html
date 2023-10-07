@@ -210,30 +210,34 @@
         let user;
         let contract;
 
+        async function init() {
+            if (typeof window.ethereum !== 'undefined') {
+                web3 = new Web3(window.ethereum);
+                try {
+                    // Request account access
+                    await window.ethereum.enable();
+                    accounts = await web3.eth.getAccounts();
+                    user = accounts[0];
+                    // Initialize contract with ABI and contract address
+                    contract = new web3.eth.Contract(abi, contractAddress);
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                console.error("MetaMask or compatible wallet extension not detected.");
+            }
+            
+            contract = web3.eth.Contract(abi, contractAddress);
+            accounts = await web3.eth.getAccounts();
+            user = accounts[0];
+        }
+
         async function play() {
             const selectedMove = document.getElementById('move').value;
 
             try {
 
-                if (typeof window.ethereum !== 'undefined') {
-                    web3 = new Web3(window.ethereum);
-                    try {
-                        // Request account access
-                        await window.ethereum.enable();
-                        accounts = await web3.eth.getAccounts();
-                        user = accounts[0];
-                        // Initialize contract with ABI and contract address
-                        contract = new web3.eth.Contract(abi, contractAddress);
-                    } catch (error) {
-                        console.error(error);
-                    }
-                } else {
-                    console.error("MetaMask or compatible wallet extension not detected.");
-                }
-                
-                contract = web3.eth.Contract(abi, contractAddress);
-                accounts = await web3.eth.getAccounts();
-                user = accounts[0];
+                init();
 
                 const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 
@@ -278,6 +282,7 @@
 
         // Call displayGameResult when the page loads to show the initial game status
         window.addEventListener('load', async () => {
+            init();
             await displayGameResult(user);
         });
 

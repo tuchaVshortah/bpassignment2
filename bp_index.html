@@ -212,7 +212,7 @@
 
         async function play() {
             const selectedMove = document.getElementById('move').value;
-            let contract = new web3.eth.Contract(abi, contractAddress);
+            contract = new web3.eth.Contract(abi, contractAddress);
 
             try {
                 await window.ethereum.enable();

@@ -210,20 +210,18 @@
         let user;
 
         async function play() {
-            web3 = new Web3(window.ethereum);
-            accounts = await web3.eth.getAccounts();
-            user = accounts[0];
             const selectedMove = document.getElementById('move').value;
             const contract = new web3.eth.Contract(abi, contractAddress);
 
             try {
                 await window.ethereum.enable();
-                
+                const accounts = await web3.eth.getAccounts();
+                const user = accounts[0];
 
-                await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
+                const result = await contract.methods.play(selectedMove).send({ from: user, value: 100000000000000 });
 
                 // Wait for the transaction to be mined
-                await waitForTransactionToBeMined();
+                await waitForTransactionToBeMined(result.transactionHash);
 
                 // Display the result
                 await displayGameResult(user);
@@ -251,10 +249,13 @@
             document.getElementById('gameResult').innerText = resultText;
         }
 
-        async function waitForTransactionToBeMined() {
-            const receipt = await web3.eth.getTransactionReceipt(txHash);
-            if (!receipt || receipt.blockNumber === null) {
-                setTimeout(waitForTransactionToBeMined, 1000); // Check again in 1 second
+        async function waitForTransactionToBeMined(transactionHash) {
+            while (true) {
+                const receipt = await web3.eth.getTransactionReceipt(transactionHash);
+                if (receipt && receipt.blockNumber) {
+                    return;
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Check again in 1 second
             }
         }
 

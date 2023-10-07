@@ -17,7 +17,6 @@
     <ul id="gameHistory"></ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.5.2/web3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.0.28/dist/ethers.min.js"></script>
 
     <script>
         const contractAddress = '0x743ef9646401b9C1997E86442c4E4b6d86152e19';
@@ -216,11 +215,10 @@
                 ethereum = window.ethereum;
                 try {
                     // Request account access
-                    await ethereum.request({ method: 'eth_requestAccounts' });
-                    const accounts = await ethereum.request({ method: 'eth_accounts' });
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
                     user = accounts[0];
                     // Initialize contract with ABI and contract address
-                    contract = new ethereum.contract(abi, contractAddress);
+                    contract = await new window.web3.eth.Contract(ABI,ADDRESS);
                 } catch (error) {
                     console.error(error);
                 }

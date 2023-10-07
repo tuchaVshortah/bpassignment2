@@ -238,7 +238,7 @@
             for (const gameId of gameHistory) {
                 const game = await contract.methods.games(gameId).call();
                 const listItem = document.createElement('li');
-                listItem.textContent = `Game ID: ${gameId}, Result: ${game.result}`;
+                listItem.textContent = `Game ID: ${gameId}, Result: ${getResultText(game.result)}`;
                 gameHistoryList.appendChild(listItem);
             }
         }
@@ -258,6 +258,21 @@
                 await update(user, contract);
             } catch (error) {
                 console.error(error);
+            }
+        }
+
+        function getResultText(result) {
+            switch (result) {
+                case '0':
+                    return 'Game in progress';
+                case '1':
+                    return 'You win!';
+                case '2':
+                    return 'You lose!';
+                case '3':
+                    return 'It\'s a draw!';
+                default:
+                    return 'Unknown result';
             }
         }
 

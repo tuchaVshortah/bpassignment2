@@ -211,7 +211,7 @@
 
         async function init() {
             if (typeof window.ethereum !== 'undefined') {
-                web3 = new Web3(window.ethereum);
+                const web3 = new Web3(window.ethereum);
                 try {
                     // Request account access
                     await window.ethereum.enable();
@@ -226,9 +226,9 @@
                 console.error("MetaMask or compatible wallet extension not detected.");
             }
             
-            contract = new web3.eth.Contract(abi, contractAddress);
-            accounts = await web3.eth.getAccounts();
-            user = accounts[0];
+            const contract = new web3.eth.Contract(abi, contractAddress);
+            const accounts = await web3.eth.getAccounts();
+            const user = accounts[0];
             
             return [user, contract];
         }
